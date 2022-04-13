@@ -38,6 +38,7 @@ module "instance" {
   ami_owner                   = "099720109477"
   assign_eip_address          = true
   associate_public_ip_address = true
+  disable_api_termination     = var.disable_api_termination
   instance_type               = "t3.medium"
   instance_profile            = var.iam_instance_profile_name
   user_data_base64            = var.user_data
