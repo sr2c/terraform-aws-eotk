@@ -1,0 +1,35 @@
+#cloud-config
+
+bootcmd:
+  - DEBIAN_FRONTEND=noninteractive apt-get -yq update
+  - DEBIAN_FRONTEND=noninteractive apt-get -yq install gnupg
+
+apt:
+  conf: | # APT config
+    APT {
+      Get {
+        Assume-Yes "true";
+        Fix-Broken "true";
+      };
+    };
+
+packages:
+  - awscli
+  - git
+  - unattended-upgrades
+package_upgrade: true
+
+runcmd:
+  - echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
+  - DEBIAN_FRONTEND=noninteractive dpkg-reconfigure unattended-upgrades
+  - sysctl -p /etc/sysctl.d/50-tcp_bbr.conf
+  - sudo -u ubuntu git clone https://github.com/alecmuffett/eotk.git /home/ubuntu/eotk
+  - cd /home/ubuntu/eotk ; sudo -u ubuntu ./opt.d/build-ubuntu-20.04.sh
+
+write_files:
+  - content: |
+      net.core.default_qdisc=fq
+      net.ipv4.tcp_congestion_control=bbr
+    path: /etc/sysctl.d/50-tcp_bbr.conf
+    owner: root:root
+    permissions: '0644'

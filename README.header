@@ -1,0 +1,27 @@
+# terraform-aws-eotk
+
+Deploy a pair of EC2 instances to run EOTK in AWS.
+
+Example:
+
+```
+
+provider "aws" {
+  region = "us-east-2"
+}
+
+provider "aws" {
+  region = "eu-central-1"
+  alias = "second_region"
+}
+
+module "eotk" {
+  providers = {
+    aws = aws,
+    aws.second_region = aws.second_region
+  }
+  source = "sr2c/eotk/aws"
+  namespace = "<your org>"
+}
+```
+
