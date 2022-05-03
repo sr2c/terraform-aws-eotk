@@ -98,6 +98,7 @@ module "instance_1" {
   context = module.this.context
   attributes = ["first"]
   user_data = data.cloudinit_config.this.rendered
+  disable_api_termination = var.disable_api_termination
 }
 
 module "instance_2" {
@@ -109,4 +110,5 @@ module "instance_2" {
   context = module.this.context
   attributes = ["second"]
   user_data = data.cloudinit_config.this.rendered
+  disable_api_termination = var.disable_api_termination
 }
