@@ -84,7 +84,9 @@ data "cloudinit_config" "this" {
   gzip = true
 
   part {
-    content = file("${path.module}/templates/user_data.yaml")
+    content = templatefile("${path.module}/templates/user_data.yaml", {
+      logrotate_script=jsonencode(templatefile("${path.module}/templates/logrotate",
+        {bucket_name=module.log_bucket.bucket_id}))})
     content_type = "text/cloud-config"
     filename = "user_data.yaml"
   }

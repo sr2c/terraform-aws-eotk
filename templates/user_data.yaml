@@ -16,6 +16,7 @@ apt:
 packages:
   - awscli
   - git
+  - logrotate
   - unattended-upgrades
 package_upgrade: true
 
@@ -27,6 +28,10 @@ runcmd:
   - cd /home/ubuntu/eotk ; sudo -u ubuntu ./opt.d/build-ubuntu-20.04.sh
 
 write_files:
+  - content: ${logrotate_script}
+    path: /etc/logrotate.d/eotk
+    owner: root:root
+    permissions: '0644'
   - content: |
       net.core.default_qdisc=fq
       net.ipv4.tcp_congestion_control=bbr

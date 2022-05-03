@@ -44,4 +44,5 @@ module "instance" {
   user_data_base64            = var.user_data
 
   context                     = module.this.context
+  tags                        = { Application = "EOTK" }
 }
