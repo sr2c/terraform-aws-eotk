@@ -1,0 +1,1 @@
+@reboot ubuntu (cd /home/ubuntu/eotk ; ./eotk bounce -a) &>/dev/null

@@ -3,9 +3,10 @@
 bootcmd:
   - DEBIAN_FRONTEND=noninteractive apt-get -yq update
   - DEBIAN_FRONTEND=noninteractive apt-get -yq install gnupg
+  - mkdir -p /etc/logrotate.d # needs to exist before write_files runs
 
 apt:
-  conf: | # APT config
+  conf: |
     APT {
       Get {
         Assume-Yes "true";
@@ -30,6 +31,10 @@ runcmd:
 write_files:
   - content: ${logrotate_script}
     path: /etc/logrotate.d/eotk
+    owner: root:root
+    permissions: '0644'
+  - content: ${crontab}
+    path: /etc/cron.d/eotk
     owner: root:root
     permissions: '0644'
   - content: |

@@ -14,7 +14,7 @@ module "log_bucket" {
 
 data "aws_iam_policy_document" "eotk" {
   statement {
-    effect = "Allow"
+    effect  = "Allow"
     actions = [
       "sts:AssumeRole"
     ]
@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "eotk" {
 
 data "aws_iam_policy_document" "logs" {
   statement {
-    effect = "Allow"
+    effect  = "Allow"
     actions = [
       "s3:PutObject",
       "s3:PutObjectAcl",
@@ -38,8 +38,8 @@ data "aws_iam_policy_document" "logs" {
   }
 
   statement {
-    effect = "Allow"
-    actions = ["s3:ListBucket"]
+    effect    = "Allow"
+    actions   = ["s3:ListBucket"]
     resources = [module.log_bucket.bucket_arn]
   }
 }
@@ -81,34 +81,36 @@ resource "aws_iam_instance_profile" "eotk" {
 
 data "cloudinit_config" "this" {
   base64_encode = true
-  gzip = true
+  gzip          = true
 
   part {
     content = templatefile("${path.module}/templates/user_data.yaml", {
-      logrotate_script=jsonencode(templatefile("${path.module}/templates/logrotate",
-        {bucket_name=module.log_bucket.bucket_id}))})
+      logrotate_script = jsonencode(templatefile("${path.module}/templates/logrotate",
+        { bucket_name = module.log_bucket.bucket_id })),
+      crontab = jsonencode(file("${path.module}/templates/crontab"))
+    })
     content_type = "text/cloud-config"
-    filename = "user_data.yaml"
+    filename     = "user_data.yaml"
   }
 }
 
 module "instance_1" {
-  source = "./region"
+  source                    = "./region"
   iam_instance_profile_name = aws_iam_instance_profile.eotk.name
-  context = module.this.context
-  attributes = ["first"]
-  user_data = data.cloudinit_config.this.rendered
-  disable_api_termination = var.disable_api_termination
+  context                   = module.this.context
+  attributes                = ["first"]
+  user_data                 = data.cloudinit_config.this.rendered
+  disable_api_termination   = var.disable_api_termination
 }
 
 module "instance_2" {
   providers = {
     aws = aws.second_region
   }
-  source = "./region"
+  source                    = "./region"
   iam_instance_profile_name = aws_iam_instance_profile.eotk.name
-  context = module.this.context
-  attributes = ["second"]
-  user_data = data.cloudinit_config.this.rendered
-  disable_api_termination = var.disable_api_termination
+  context                   = module.this.context
+  attributes                = ["second"]
+  user_data                 = data.cloudinit_config.this.rendered
+  disable_api_termination   = var.disable_api_termination
 }
