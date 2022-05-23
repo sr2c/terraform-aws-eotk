@@ -87,7 +87,7 @@ data "cloudinit_config" "this" {
     content = templatefile("${path.module}/templates/user_data.yaml", {
       logrotate_script = jsonencode(templatefile("${path.module}/templates/logrotate",
         { bucket_name = module.log_bucket.bucket_id })),
-      crontab = jsonencode(file("${path.module}/templates/crontab"))
+      crontab = jsonencode(file("${path.module}/templates/cron"))
     })
     content_type = "text/cloud-config"
     filename     = "user_data.yaml"
@@ -101,6 +101,7 @@ module "instance_1" {
   attributes                = ["first"]
   user_data                 = data.cloudinit_config.this.rendered
   disable_api_termination   = var.disable_api_termination
+  max_transfer_per_hour     = var.max_transfer_per_hour
 }
 
 module "instance_2" {
@@ -113,4 +114,5 @@ module "instance_2" {
   attributes                = ["second"]
   user_data                 = data.cloudinit_config.this.rendered
   disable_api_termination   = var.disable_api_termination
+  max_transfer_per_hour     = var.max_transfer_per_hour
 }
