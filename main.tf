@@ -14,7 +14,7 @@ module "log_bucket" {
 
 data "aws_iam_policy_document" "eotk" {
   statement {
-    effect  = "Allow"
+    effect = "Allow"
     actions = [
       "sts:AssumeRole"
     ]
@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "eotk" {
 
 data "aws_iam_policy_document" "logs" {
   statement {
-    effect  = "Allow"
+    effect = "Allow"
     actions = [
       "s3:PutObject",
       "s3:PutObjectAcl",
@@ -86,7 +86,7 @@ data "cloudinit_config" "this" {
   part {
     content = templatefile("${path.module}/templates/user_data.yaml", {
       logrotate_script = jsonencode(templatefile("${path.module}/templates/logrotate",
-        { bucket_name = module.log_bucket.bucket_id })),
+      { bucket_name = module.log_bucket.bucket_id })),
       crontab = jsonencode(file("${path.module}/templates/cron"))
     })
     content_type = "text/cloud-config"
