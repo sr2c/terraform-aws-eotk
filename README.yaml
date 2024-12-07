@@ -1,5 +1,6 @@
 ---
 name: terraform-aws-eotk
+deprecated: true
 tags:
   - aws
   - terraform
@@ -9,7 +10,6 @@ categories:
   - terraform-modules/supported
 license: BSD2
 gitlab_repo: sr2c/terraform-aws-eotk
-deprecated: true
 description: |-
   Terraform module to deploy a pair of EC2 instances to run EOTK in AWS.
 usage: |-
